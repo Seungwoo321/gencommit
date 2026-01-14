@@ -63,16 +63,10 @@ export class ClaudeCodeProvider implements AIProvider {
   }
 
   async login(): Promise<void> {
-    console.log('Claude Code uses OAuth authentication.');
-    console.log('Run "claude" to start authentication if not already logged in.');
+    console.log('Setting up Claude Code authentication token...');
+    console.log('This requires a Claude subscription.');
     console.log('');
-    console.log('Checking current status...');
-    const status = await this.status();
-    if (status.available) {
-      console.log(`✓ Claude Code CLI is available (${status.version})`);
-    } else {
-      console.log('✗ Claude Code CLI not found. Install: https://docs.anthropic.com/en/docs/claude-code');
-    }
+    await execCommand('claude', ['setup-token'], { timeout: 120000 });
   }
 
   async status(): Promise<ProviderStatus> {
