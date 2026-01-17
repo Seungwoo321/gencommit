@@ -31,7 +31,9 @@ export {
   getGitStatus,
   getAllChangedFiles,
   hasChanges,
+  getRemoteStatus,
 } from './git/status.js';
+export type { RemoteStatus } from './git/status.js';
 export { generateTreeSummary, generateFullTreeSummary } from './git/tree.js';
 export { getModifiedDiffs, getDiffContent } from './git/diff.js';
 export { executeCommits, stageFiles } from './git/executor.js';

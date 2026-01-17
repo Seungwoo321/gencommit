@@ -116,3 +116,66 @@ export async function hasChanges(cwd?: string): Promise<boolean> {
   const { stats } = await getGitStatus(cwd);
   return stats.total > 0;
 }
+
+export interface RemoteStatus {
+  hasRemote: boolean;
+  behind: number;
+  ahead: number;
+  needsPull: boolean;
+  needsPush: boolean;
+  diverged: boolean;
+}
+
+/**
+ * Check remote tracking branch status
+ * Returns info about whether local is behind/ahead of remote
+ */
+export async function getRemoteStatus(cwd?: string): Promise<RemoteStatus> {
+  const git = getGit(cwd);
+  const defaultStatus: RemoteStatus = {
+    hasRemote: false,
+    behind: 0,
+    ahead: 0,
+    needsPull: false,
+    needsPush: false,
+    diverged: false,
+  };
+
+  try {
+    // Fetch latest from remote (silently)
+    await git.fetch(['--quiet']);
+
+    // Get current branch
+    const branch = await getCurrentBranch(cwd);
+
+    // Check if there's a remote tracking branch
+    let upstream: string;
+    try {
+      const result = await git.raw(['rev-parse', '--abbrev-ref', `${branch}@{upstream}`]);
+      upstream = result.trim();
+    } catch {
+      // No upstream branch configured
+      return defaultStatus;
+    }
+
+    if (!upstream) {
+      return defaultStatus;
+    }
+
+    // Get ahead/behind counts
+    const revList = await git.raw(['rev-list', '--left-right', '--count', `${branch}...${upstream}`]);
+    const [ahead, behind] = revList.trim().split(/\s+/).map(Number);
+
+    return {
+      hasRemote: true,
+      behind: behind || 0,
+      ahead: ahead || 0,
+      needsPull: behind > 0,
+      needsPush: ahead > 0,
+      diverged: ahead > 0 && behind > 0,
+    };
+  } catch {
+    // If anything fails, return default (no remote info)
+    return defaultStatus;
+  }
+}

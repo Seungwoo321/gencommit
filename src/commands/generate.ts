@@ -13,6 +13,7 @@ import {
   getGitStatus,
   getAllChangedFiles,
   hasChanges,
+  getRemoteStatus,
 } from '../git/status.js';
 import { generateFullTreeSummary } from '../git/tree.js';
 import { getDiffContent } from '../git/diff.js';
@@ -55,6 +56,20 @@ export async function generateCommand(
   if (!(await hasChanges())) {
     logger.warning('No changes to commit');
     process.exit(0);
+  }
+
+  // Check remote status and abort if behind
+  const remoteStatus = await getRemoteStatus();
+  if (remoteStatus.hasRemote) {
+    if (remoteStatus.diverged) {
+      logger.error(`Branch has diverged from remote (${remoteStatus.ahead} ahead, ${remoteStatus.behind} behind)`);
+      logger.error('Run: git pull --rebase');
+      process.exit(1);
+    } else if (remoteStatus.needsPull) {
+      logger.error(`Branch is ${remoteStatus.behind} commit(s) behind remote`);
+      logger.error('Run: git pull');
+      process.exit(1);
+    }
   }
 
   // Build config
