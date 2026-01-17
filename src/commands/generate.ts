@@ -154,6 +154,10 @@ ${treeSummary}`;
   } catch (error) {
     spinner.fail('Failed to generate commits');
     logger.error(String(error));
+    console.log('');
+    console.log('If this issue persists, please report it at:');
+    console.log('  https://github.com/Seungwoo321/genai-commit/issues');
+    console.log('');
     process.exit(1);
   }
 }

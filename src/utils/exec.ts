@@ -8,6 +8,7 @@ export interface ExecOptions {
   input?: string;
   timeout?: number;
   cwd?: string;
+  interactive?: boolean;
 }
 
 export interface ExecResult {
@@ -24,7 +25,36 @@ export async function execCommand(
   args: string[],
   options: ExecOptions = {}
 ): Promise<ExecResult> {
-  const { input, timeout = 120000, cwd } = options;
+  const { input, timeout = 120000, cwd, interactive = false } = options;
+
+  // Interactive mode: inherit stdio for terminal interaction
+  if (interactive) {
+    return new Promise((resolve, reject) => {
+      const proc = spawn(command, args, {
+        cwd,
+        stdio: 'inherit',
+      });
+
+      const timer = setTimeout(() => {
+        proc.kill('SIGTERM');
+        reject(new Error(`Command timed out after ${timeout}ms`));
+      }, timeout);
+
+      proc.on('close', (code) => {
+        clearTimeout(timer);
+        resolve({
+          stdout: '',
+          stderr: '',
+          exitCode: code ?? 0,
+        });
+      });
+
+      proc.on('error', (err) => {
+        clearTimeout(timer);
+        reject(err);
+      });
+    });
+  }
 
   return new Promise((resolve, reject) => {
     const proc = spawn(command, args, {

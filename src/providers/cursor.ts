@@ -24,8 +24,8 @@ export class CursorCLIProvider implements AIProvider {
     const fullInput = `${prompt}\n\n---\n\n${input}`;
 
     const result = await execCommand(
-      'cursor',
-      ['agent', '-p', '--model', this.model, '--output-format', 'text'],
+      'agent',
+      ['-p', '--model', this.model, '--output-format', 'text'],
       {
         input: fullInput,
         timeout: this.timeout,
@@ -44,13 +44,13 @@ export class CursorCLIProvider implements AIProvider {
   }
 
   async login(): Promise<void> {
-    console.log('Logging in to Cursor...');
-    await execCommand('cursor', ['agent', 'login'], { timeout: 60000 });
+    console.log('Logging in to Cursor Agent...');
+    await execCommand('agent', ['login'], { timeout: 120000, interactive: true });
   }
 
   async status(): Promise<ProviderStatus> {
     try {
-      const result = await execCommand('cursor', ['agent', 'status'], { timeout: 10000 });
+      const result = await execCommand('agent', ['--version'], { timeout: 10000 });
       return {
         available: true,
         details: result.stdout.trim() || 'Cursor CLI is available',

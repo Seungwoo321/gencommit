@@ -7,6 +7,7 @@ import { Command } from 'commander';
 import { generateCommand } from './commands/generate.js';
 import { loginCommand } from './commands/login.js';
 import { statusCommand } from './commands/status.js';
+import { modelsCommand } from './commands/models.js';
 
 const program = new Command();
 
@@ -36,6 +37,12 @@ program
   .description('Check authentication status')
   .action(statusCommand);
 
+// Models command: genai-commit models <provider>
+program
+  .command('models <provider>')
+  .description('List supported models for a provider')
+  .action(modelsCommand);
+
 // Help examples
 program.addHelpText(
   'after',
@@ -43,12 +50,13 @@ program.addHelpText(
 Examples:
   $ genai-commit claude-code              # Generate with Claude Code
   $ genai-commit cursor-cli               # Generate with Cursor CLI
-  $ genai-commit cursor-cli --model sonnet-4.5
+  $ genai-commit cursor-cli --model claude-4.5-sonnet
   $ genai-commit claude-code --lang ko    # Korean title and message
 
-  $ genai-commit login cursor-cli         # Login to Cursor
+  $ genai-commit login cursor-cli         # Login to Cursor Agent
   $ genai-commit login claude-code        # Setup Claude token
   $ genai-commit status claude-code       # Check Claude status
+  $ genai-commit models cursor-cli        # List supported models
 
 Interactive options:
   [y] Commit all proposed commits
