@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.0-beta.2](https://github.com/Seungwoo321/genai-commit/compare/v1.1.0-beta.1...v1.1.0-beta.2) (2026-01-17)
+
+### Features
+
+* add remote tracking branch status check ([dc55d81](https://github.com/Seungwoo321/genai-commit/commit/dc55d815b2181441330c6862e4f4c36279bbb079))
+
+### Documentation
+
+* update CLI names and usage examples ([61cc3dd](https://github.com/Seungwoo321/genai-commit/commit/61cc3dd04c4207521701d868114bf7bf0d9c1d3e))
+
 ## [1.1.0-beta.1](https://github.com/Seungwoo321/genai-commit/compare/v1.1.0-beta.0...v1.1.0-beta.1) (2026-01-17)
 ## [1.0.2](https://github.com/Seungwoo321/genai-commit/compare/v1.1.0-beta.0...v1.1.0-beta.1) (2026-01-17)
 ## [1.0.1](https://github.com/Seungwoo321/genai-commit/compare/v1.1.0-beta.0...v1.1.0-beta.1) (2026-01-14)
