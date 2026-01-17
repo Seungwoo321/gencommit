@@ -66,7 +66,7 @@ export class ClaudeCodeProvider implements AIProvider {
     console.log('Setting up Claude Code authentication token...');
     console.log('This requires a Claude subscription.');
     console.log('');
-    await execCommand('claude', ['setup-token'], { timeout: 120000 });
+    await execCommand('claude', ['setup-token'], { timeout: 120000, interactive: true });
   }
 
   async status(): Promise<ProviderStatus> {
