@@ -47,7 +47,7 @@ flowchart TD
 You need at least one of these AI CLI tools installed:
 
 - [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) - Anthropic's official CLI
-- [Cursor CLI](https://www.cursor.com/) - Cursor's agent CLI
+- [Cursor Agent CLI](https://www.cursor.com/) - Cursor's agent CLI (command: `agent`)
 
 ## Installation
 
@@ -67,11 +67,12 @@ npx genai-commit claude-code
 # Using Claude Code
 genai-commit claude-code
 
-# Using Cursor CLI
+# Using Cursor Agent
 genai-commit cursor-cli
 
-# With specific model (Cursor only)
-genai-commit cursor-cli --model sonnet-4.5
+# With specific model
+genai-commit cursor-cli --model claude-4.5-sonnet
+genai-commit claude-code --model sonnet
 
 # Set language for both title and message
 genai-commit claude-code --lang ko
@@ -83,7 +84,7 @@ genai-commit claude-code --title-lang en --message-lang ko
 ### Authentication
 
 ```bash
-# Login to Cursor
+# Login to Cursor Agent
 genai-commit login cursor-cli
 
 # Setup Claude token
@@ -92,6 +93,16 @@ genai-commit login claude-code
 # Check status
 genai-commit status claude-code
 genai-commit status cursor-cli
+```
+
+### List Supported Models
+
+```bash
+# List models for Cursor Agent
+genai-commit models cursor-cli
+
+# List models for Claude Code
+genai-commit models claude-code
 ```
 
 ### Interactive Options
@@ -112,7 +123,7 @@ After generating commit messages, you'll see an interactive menu:
 | `--lang <lang>` | Set both title and message language (en\|ko) | - |
 | `--title-lang <lang>` | Language for commit title | `en` |
 | `--message-lang <lang>` | Language for commit message | `ko` |
-| `--model <model>` | Model to use (Cursor CLI only) | `gemini-3-flash` |
+| `--model <model>` | Model to use | `claude-4.5-sonnet` (Cursor) / `haiku` (Claude) |
 
 ## Examples
 
@@ -146,35 +157,6 @@ genai-commit claude-code
 4. Enter your feedback (e.g., "Split the auth changes into separate commits")
 5. AI regenerates based on your feedback
 6. Press `y` to commit
-
-## Programmatic Usage
-
-```typescript
-import {
-  createProvider,
-  isGitRepository,
-  getCurrentBranch,
-  getGitStatus,
-  generateFullTreeSummary,
-} from 'genai-commit';
-
-// Create a provider
-const provider = createProvider('claude-code', { timeout: 120000 });
-
-// Check provider status
-const status = await provider.status();
-console.log(status.available ? 'Ready' : 'Not available');
-
-// Generate commits programmatically
-const branch = await getCurrentBranch();
-const { changes } = await getGitStatus();
-const treeSummary = generateFullTreeSummary(branch, changes);
-
-const response = await provider.generate(treeSummary, 'commit');
-const result = provider.parseResponse(response);
-
-console.log(result.commits);
-```
 
 ## Supported Commit Types
 
