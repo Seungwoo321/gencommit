@@ -7,6 +7,7 @@ import { Command } from 'commander';
 import { generateCommand } from './commands/generate.js';
 import { loginCommand } from './commands/login.js';
 import { statusCommand } from './commands/status.js';
+import { modelsCommand } from './commands/models.js';
 
 const program = new Command();
 
@@ -35,6 +36,12 @@ program
   .command('status <provider>')
   .description('Check authentication status')
   .action(statusCommand);
+
+// Models command: genai-commit models <provider>
+program
+  .command('models <provider>')
+  .description('List supported models for a provider')
+  .action(modelsCommand);
 
 // Help examples
 program.addHelpText(
